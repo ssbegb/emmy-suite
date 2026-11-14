@@ -1,0 +1,51 @@
+{% extends "portal/settings/_base.html" %}{% load emmy %}
+{% block content %}
+<div class="page-head"><div><h1>Users</h1><p class="muted">People who can sign in to {{ request.company.name }}.</p></div></div>
+<div class="grid-2">
+  <div class="stack">
+    <div class="card table-wrap" style="padding:0">
+      <table>
+        <thead><tr><th>User</th><th>Role</th><th class="right"></th></tr></thead>
+        <tbody>
+        {% for m in memberships %}
+          <tr>
+            <td><div class="person"><span class="avatar sm">{{ m.user.initials }}</span><div><strong>{{ m.user.display_name }}</strong><br><span class="muted">{{ m.user.email }}</span></div></div></td>
+            <td>
+              <form class="inline" method="post" action="{% url 'portal:settings_user_role' m.pk %}">{% csrf_token %}
+                <select name="role" onchange="this.form.submit()" aria-label="Role for {{ m.user.email }}">
+                  {% for value, label in roles %}<option value="{{ value }}"{% if value == m.role %} selected{% endif %}>{{ label }}</option>{% endfor %}
+                </select>
+              </form>
+            </td>
+            <td class="right">{% if m.user != request.user %}
+              <form class="inline" method="post" action="{% url 'portal:settings_user_remove' m.pk %}" onsubmit="return confirm('Remove {{ m.user.email }} from {{ request.company.name }}?')">{% csrf_token %}
+                <button class="btn danger sm" title="Remove access">{% icon "trash" 14 %}</button></form>{% endif %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if invitations %}
+    <div class="card table-wrap" style="padding:0">
+      <table>
+        <thead><tr><th>Pending invitation</th><th>Role</th><th>Expires</th><th class="right"></th></tr></thead>
+        <tbody>
+        {% for i in invitations %}
+          <tr><td>{% icon "mail" 16 %} {{ i.email }}</td><td>{{ i.get_role_display }}</td><td class="muted">{{ i.expires_at|date:"j M Y" }}</td>
+            <td class="right"><form class="inline" method="post" action="{% url 'portal:settings_invite_cancel' i.pk %}">{% csrf_token %}<button class="btn secondary sm">Cancel</button></form></td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+  </div>
+  <div class="card">
+    <h2>Invite someone</h2>
+    <form method="post">{% csrf_token %}
+      {% for field in form %}<div class="field">{{ field.label_tag }}{{ field }}{{ field.errors }}</div>{% endfor %}
+      <button type="submit">{% icon "mail" 16 %} Send invitation</button>
+    </form>
+    <p class="helptext" style="margin-top:16px"><strong>Administrators</strong> manage settings, users and modules. <strong>Managers</strong> can edit the organization and module data. <strong>Members</strong> use the apps.</p>
+  </div>
+</div>
+{% endblock %}

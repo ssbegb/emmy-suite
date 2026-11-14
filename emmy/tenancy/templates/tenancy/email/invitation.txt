@@ -1,0 +1,8 @@
+Hello,
+
+{{ inviter.display_name }} has invited you to join {{ invitation.company.name }} on Emmy Suite as {{ invitation.get_role_display|lower }}.
+
+Accept the invitation here:
+{{ link }}
+
+This link expires on {{ invitation.expires_at|date:"j F Y" }}.

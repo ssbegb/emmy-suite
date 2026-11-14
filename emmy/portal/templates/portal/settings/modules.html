@@ -1,0 +1,16 @@
+{% extends "portal/settings/_base.html" %}{% load emmy %}
+{% block content %}
+<div class="page-head"><div><h1>Modules</h1><p class="muted">Choose which apps {{ request.company.name }} uses. Switching one off hides it but keeps its data.</p></div></div>
+<div class="card">
+  {% for module, on in modules %}
+    <div class="module-row">
+      <span class="badge" style="background:{{ module.color }}">{% icon module.icon 22 %}</span>
+      <div class="text"><strong>{{ module.name }}</strong> {% if on %}<span class="pill on">on</span>{% endif %}<br><span class="muted">{{ module.description }}</span></div>
+      <form method="post" action="{% url 'portal:settings_module_toggle' module.key %}">{% csrf_token %}
+        {% if on %}<input type="hidden" name="enabled" value="0"><button class="btn secondary">Switch off</button>
+        {% else %}<input type="hidden" name="enabled" value="1"><button class="btn">Switch on</button>{% endif %}
+      </form>
+    </div>
+  {% empty %}<p class="empty">No optional modules are installed yet.</p>{% endfor %}
+</div>
+{% endblock %}

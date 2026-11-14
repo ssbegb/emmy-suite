@@ -1,0 +1,11 @@
+{% extends "allauth/layouts/base.html" %}
+{% block head_title %}Set up your organization{% endblock %}
+{% block content %}
+<h1>Set up your organization</h1>
+<p class="muted" style="text-align:center">If you were invited to an existing company, open the link in your invitation email instead.</p>
+<form method="post">{% csrf_token %}
+  {% for field in form %}<div class="field">{{ field.label_tag }}{{ field }}{% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}{{ field.errors }}</div>{% endfor %}
+  <button type="submit">Create organization</button>
+</form>
+<form method="post" action="{% url 'account_logout' %}" style="text-align:center;margin-top:16px">{% csrf_token %}<button class="btn link">Sign out</button></form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "org/_base.html" %}{% load emmy %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Org chart</h1><p class="muted">How {{ request.company.name }} is organized.</p></div>
+  {% if request.membership.role != "member" %}<div class="actions" style="margin:0">
+    <a class="btn secondary" href="{% url 'org:department_new' %}">{% icon "plus" 16 %} Department</a>
+    <a class="btn" href="{% url 'org:employee_new' %}">{% icon "plus" 16 %} Person</a></div>{% endif %}
+</div>
+{% if tree or unassigned %}
+  <ul class="org-tree">{% for node in tree %}{% include "org/_node.html" %}{% endfor %}</ul>
+  {% if unassigned %}<div class="card" style="margin-top:24px"><h2>Not in a department</h2><div class="org-dept" style="border:0;box-shadow:none;padding:0"><div class="people">
+    {% for e in unassigned %}<span class="chip"><span class="avatar">{{ e.full_name|initials }}</span>{{ e.full_name }}</span>{% endfor %}</div></div></div>{% endif %}
+{% else %}
+  <div class="card empty">{% icon "network" 40 %}<p>No departments yet. Start with the top of your organization, for example “Management”, and add the departments below it.</p>
+  {% if request.membership.role != "member" %}<a class="btn" href="{% url 'org:department_new' %}">Add the first department</a>{% endif %}</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "portal/settings/_base.html" %}
+{% block content %}
+<div class="page-head"><div><h1>Company details</h1><p class="muted">Shown on documents and to people you invite.</p></div></div>
+<div class="card">
+  <form method="post">{% csrf_token %}
+    <div class="form-grid">
+      {% for field in form %}<div class="field{% if field.name == 'address' %} wide{% endif %}">{{ field.label_tag }}{{ field }}{{ field.errors }}</div>{% endfor %}
+    </div>
+    <button type="submit">Save</button>
+  </form>
+</div>
+{% endblock %}

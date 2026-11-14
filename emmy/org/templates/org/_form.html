@@ -1,0 +1,15 @@
+{% load emmy %}<div class="card" style="max-width:720px">
+  <form method="post">{% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form-grid">
+      {% for field in form %}<div class="field{% if field.field.widget.input_type == 'checkbox' %} wide{% endif %}">
+        {% if field.field.widget.input_type == 'checkbox' %}<label>{{ field }} {{ field.label }}</label>{% else %}{{ field.label_tag }}{{ field }}{% endif %}
+        {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}{{ field.errors }}</div>{% endfor %}
+    </div>
+    <div class="actions">
+      <button type="submit">Save</button><a class="btn secondary" href="{{ cancel_url }}">Cancel</a>
+      {% if object %}<span class="spacer" style="flex:1"></span>
+        <button class="btn danger" formaction="{{ delete_url }}" formnovalidate onclick="return confirm('Delete {{ object }}?')">{% icon "trash" 16 %} Delete</button>{% endif %}
+    </div>
+  </form>
+</div>

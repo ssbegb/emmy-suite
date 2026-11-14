@@ -1,0 +1,41 @@
+{% load static emmy %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% if current_app %}{{ current_app.name }} · {% endif %}Emmy Suite{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'emmy/app.css' %}">
+</head>
+<body>
+<header class="topbar">
+  <a class="home" href="{% url 'portal:home' %}" title="All apps">{% icon "grid" 20 %}<span class="logo">E</span></a>
+  {% if current_app %}<span class="appname">{{ current_app.name }}</span>{% endif %}
+  <nav class="appnav">{% block appnav %}{% endblock %}</nav>
+  <div class="spacer"></div>
+  {% if request.memberships %}
+    <form class="company-switch" method="post" action="{% url 'tenancy:switch_company' %}">
+      {% csrf_token %}<input type="hidden" name="next" value="{% url 'portal:home' %}">
+      {% if request.memberships|length > 1 %}
+        <select name="company" onchange="this.form.submit()" aria-label="Current company">
+          {% for m in request.memberships %}<option value="{{ m.company_id }}"{% if m.company_id == request.company.pk %} selected{% endif %}>{{ m.company.name }}</option>{% endfor %}
+        </select>
+      {% else %}<span class="single">{% icon "building" 16 %} {{ request.company.name }}</span>{% endif %}
+    </form>
+  {% endif %}
+  <details class="menu">
+    <summary><span class="avatar">{{ request.user.initials }}</span></summary>
+    <div class="panel">
+      <div class="who"><strong>{{ request.user.display_name }}</strong><br><span class="muted">{{ request.user.email }}</span>
+        {% if request.membership %}<br><span class="pill">{{ request.membership.get_role_display }}</span>{% endif %}</div>
+      <a href="{% url 'portal:profile' %}">{% icon "user" 16 %} My profile</a>
+      <a href="{% url 'account_change_password' %}">{% icon "settings" 16 %} Password</a>
+      <form method="post" action="{% url 'account_logout' %}">{% csrf_token %}<button>{% icon "logout" 16 %} Sign out</button></form>
+    </div>
+  </details>
+</header>
+<main>
+  {% if messages %}<ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>{% endif %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

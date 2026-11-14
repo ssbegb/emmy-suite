@@ -1,0 +1,11 @@
+{% load emmy %}<li class="org-node">
+  <div class="org-dept">
+    <div class="title">{% icon "building" 16 %}
+      {% if request.membership.role != "member" %}<a href="{% url 'org:department_edit' node.department.pk %}">{{ node.department.name }}</a>{% else %}{{ node.department.name }}{% endif %}
+      <span class="muted" style="font-weight:400">· {{ node.employees|length }}</span></div>
+    {% if node.employees %}<div class="people">
+      {% for e in node.employees %}<span class="chip{% if e.pk == node.department.head_id %} head{% endif %}" title="{{ e.job_title }}"><span class="avatar">{{ e.full_name|initials }}</span>{{ e.full_name }}{% if e.pk == node.department.head_id %} <span class="muted">· head</span>{% endif %}</span>{% endfor %}
+    </div>{% endif %}
+  </div>
+  {% if node.children %}<ul>{% for child in node.children %}{% include "org/_node.html" with node=child %}{% endfor %}</ul>{% endif %}
+</li>

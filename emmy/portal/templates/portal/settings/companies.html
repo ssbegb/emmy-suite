@@ -1,0 +1,26 @@
+{% extends "portal/settings/_base.html" %}
+{% block content %}
+<div class="page-head"><div><h1>Companies</h1><p class="muted">Every company in {{ request.tenant.name }}. Each one keeps its own people, data and modules.</p></div></div>
+<div class="grid-2">
+  <div class="card table-wrap" style="padding:0">
+    <table>
+      <thead><tr><th>Company</th><th>Country</th><th class="right">Your access</th></tr></thead>
+      <tbody>
+      {% for c in companies %}
+        <tr><td><strong>{{ c.name }}</strong>{% if c.pk == request.company.pk %} <span class="pill on">current</span>{% endif %}</td>
+          <td class="muted">{{ c.country|default:"—" }}</td>
+          <td class="right">{% if c.pk in my_companies %}<span class="pill">member</span>{% else %}<span class="muted">none</span>{% endif %}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Add a company</h2>
+    <form method="post">{% csrf_token %}
+      {% for field in form %}<div class="field">{{ field.label_tag }}{{ field }}{{ field.errors }}</div>{% endfor %}
+      <button type="submit">Create company</button>
+      <p class="helptext">You'll be its administrator and can invite people to it.</p>
+    </form>
+  </div>
+</div>
+{% endblock %}

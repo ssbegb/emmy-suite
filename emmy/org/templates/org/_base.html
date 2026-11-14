@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block appnav %}
+  <a href="{% url 'org:chart' %}"{% if tab == "chart" %} class="active"{% endif %}>Org chart</a>
+  <a href="{% url 'org:employees' %}"{% if tab == "people" %} class="active"{% endif %}>People</a>
+  <a href="{% url 'org:departments' %}"{% if tab == "departments" %} class="active"{% endif %}>Departments</a>
+{% endblock %}

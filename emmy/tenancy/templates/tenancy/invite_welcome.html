@@ -1,0 +1,10 @@
+{% extends "allauth/layouts/base.html" %}
+{% block head_title %}You're invited{% endblock %}
+{% block content %}
+<h1>Join {{ invitation.company.name }}</h1>
+<p style="text-align:center">You've been invited as <strong>{{ invitation.get_role_display|lower }}</strong>. Create an account or sign in with <strong>{{ invitation.email }}</strong> to accept.</p>
+<div class="actions" style="justify-content:center">
+  <a class="btn" href="{% url 'account_signup' %}?next={{ request.path|urlencode }}">Create account</a>
+  <a class="btn secondary" href="{% url 'account_login' %}?next={{ request.path|urlencode }}">Sign in</a>
+</div>
+{% endblock %}

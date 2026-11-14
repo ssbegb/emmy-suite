@@ -1,0 +1,7 @@
+{% extends "allauth/layouts/base.html" %}
+{% block head_title %}Accept invitation{% endblock %}
+{% block content %}
+<h1>Join {{ invitation.company.name }}?</h1>
+<p style="text-align:center">You'll have access as <strong>{{ invitation.get_role_display|lower }}</strong>.</p>
+<form method="post">{% csrf_token %}<button type="submit">Accept invitation</button></form>
+{% endblock %}

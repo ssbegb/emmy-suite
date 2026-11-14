@@ -1,0 +1,18 @@
+{% extends "org/_base.html" %}{% load emmy %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Departments</h1></div>
+  {% if request.membership.role != "member" %}<a class="btn" href="{% url 'org:department_new' %}">{% icon "plus" 16 %} Department</a>{% endif %}
+</div>
+<div class="card table-wrap" style="padding:0">
+  <table>
+    <thead><tr><th>Department</th><th>Part of</th><th>Head</th></tr></thead>
+    <tbody>
+    {% for d in departments %}
+      <tr><td>{% if request.membership.role != "member" %}<a href="{% url 'org:department_edit' d.pk %}"><strong>{{ d.name }}</strong></a>{% else %}<strong>{{ d.name }}</strong>{% endif %}</td>
+        <td class="muted">{{ d.parent.path|default:"— top level —" }}</td><td>{{ d.head|default:"—" }}</td></tr>
+    {% empty %}<tr><td colspan="3" class="empty">No departments yet.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "org/_base.html" %}
+{% block content %}
+<div class="page-head"><div><h1>{% if object %}{{ object.name }}{% else %}New department{% endif %}</h1></div></div>
+{% url 'org:departments' as cancel_url %}{% if object %}{% url 'org:department_delete' object.pk as delete_url %}{% endif %}
+{% include "org/_form.html" %}
+{% endblock %}

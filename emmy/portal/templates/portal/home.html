@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% load emmy %}
+{% block content %}
+<div class="home-greeting">
+  <h1>Hello, {{ request.user.display_name }}</h1>
+  <p class="muted">{{ request.company.name }}</p>
+</div>
+<div class="tiles">
+  {% for app in tiles %}
+    <a class="tile" href="{% url app.url_name %}">
+      <span class="badge" style="background:{{ app.color }}">{% icon app.icon 30 %}</span>
+      <span>{{ app.name }}</span>
+    </a>
+  {% endfor %}
+</div>
+{% if request.membership.is_admin %}
+  <p class="muted" style="text-align:center;margin-top:32px">Want more apps? Switch on modules in <a href="{% url 'portal:settings_modules' %}">Settings › Modules</a>.</p>
+{% endif %}
+{% endblock %}

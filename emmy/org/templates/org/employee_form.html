@@ -1,0 +1,7 @@
+{% extends "org/_base.html" %}
+{% block content %}
+<div class="page-head"><div><h1>{% if object %}{{ object.full_name }}{% else %}New person{% endif %}</h1>
+  <p class="muted">People don't need a login. Link one only if this person signs in to Emmy Suite.</p></div></div>
+{% url 'org:employees' as cancel_url %}{% if object %}{% url 'org:employee_delete' object.pk as delete_url %}{% endif %}
+{% include "org/_form.html" %}
+{% endblock %}
